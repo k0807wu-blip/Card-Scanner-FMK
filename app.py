@@ -52,8 +52,8 @@ CARD_FIELDS = [
 ]
 
 GHL_WEBHOOK_URL = (
-    "https://services.leadconnectorhq.com/hooks/zY8JbOOVat7EkBLQyIkB"
-    "/webhook-trigger/aeae4188-2510-4be6-b946-2b9968a7067c"
+    "https://services.leadconnectorhq.com/hooks/yizY5nSxtIyjnf8qVXIY"
+    "/webhook-trigger/hXjEXArKSyC7fqdymDyH"
 )
 
 

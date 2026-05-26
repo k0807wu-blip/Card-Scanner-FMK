@@ -72,13 +72,18 @@ def analyze_business_card(image_content: bytes) -> dict:
   "職稱": "",
   "email": "",
   "電話": "",
-  "住所": ""
+  "住所": "",
+  "language_tag": ""
 }
 
 說明：
 - 縣市：日本都道府縣或城市，例如青森、福島、秋田、三重縣、北海道等
 - 名字_羅馬拼音：姓名的羅馬字拼音（Romaji），名片上有標注時優先使用，否則依訓令式羅馬字推導
 - 部門：完整組織層級，從最高層依序列出以空格連接，例如「事業部 営業企画課」
+- language_tag：根據以下規則判斷，只能填入 "JPN"、"CN"、"CN+ENG" 其中之一，無法判斷則留空
+  * JPN：名片含有日文假名（平假名/片假名）或日本特有詞彙（株式会社、課長等），或日本地址/電話格式
+  * CN：名片為純繁體/簡體中文，無日文假名，含中文公司名稱（有限公司、股份有限公司等）
+  * CN+ENG：名片主要語言為英文，但姓名為中文音譯（如 Wang、Chen、Lin 等）或有中文公司名搭配英文版本
 - 找不到的欄位請留空字串
 - 只回傳 JSON，不要其他說明文字"""
 
@@ -211,15 +216,16 @@ def reply_text(reply_token: str, text: str) -> None:
 
 def send_to_ghl(card: dict) -> None:
     payload = {
-        "prefecture":  card.get("縣市", ""),
-        "company":     card.get("公司_單位", ""),
-        "name":        card.get("名字", ""),
-        "name_romaji": card.get("名字_羅馬拼音", ""),
-        "department":  card.get("部門", ""),
-        "title":       card.get("職稱", ""),
-        "email":       card.get("email", ""),
-        "phone":       card.get("電話", ""),
-        "address":     card.get("住所", ""),
+        "prefecture":    card.get("縣市", ""),
+        "company":       card.get("公司_單位", ""),
+        "name":          card.get("名字", ""),
+        "name_romaji":   card.get("名字_羅馬拼音", ""),
+        "department":    card.get("部門", ""),
+        "title":         card.get("職稱", ""),
+        "email":         card.get("email", ""),
+        "phone":         card.get("電話", ""),
+        "address":       card.get("住所", ""),
+        "language_tag":  card.get("language_tag", ""),
     }
     resp = requests.post(GHL_WEBHOOK_URL, json=payload, timeout=10)
     resp.raise_for_status()
